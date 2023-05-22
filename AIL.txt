@@ -1,0 +1,648 @@
+||   AIL   ||
+___________________________________________________________________________________________
+TSP_NN
+___________________________________________________________________________________________
+
+import random
+adj = []
+for i in range(4):
+  adj.append(random.sample(range(100), 4))
+
+for i in range(len(adj)):
+  for j in range(len(adj[i])):
+    if i == j:
+      adj[i][j] = 999
+
+
+
+
+import numpy as np
+np.array(adj)
+
+'''
+Output - array([[999,  56,  24,  88],
+       [ 63, 999,  65,  44],
+       [ 32,  17, 999,  48],
+       [ 83,  92,  95, 999]])    
+          
+'''
+
+
+
+min(adj[0])
+
+'''
+Output - 24
+'''
+
+
+
+start = int(input())
+
+
+
+
+visited = []
+dist = 0
+visited.append(start)
+while list(set(visited))!=[i for i in range(len(adj))]:
+    for i in range(len(adj)):
+        adj[i][visited[-1]]=999
+    nxt = adj[visited[-1]].index(min(adj[visited[-1]]))
+    dist+=min(adj[visited[-1]])
+    print(np.array(adj))
+    print(nxt)
+    visited.append(nxt)
+    continue
+
+'''
+Output - 
+[[999  56  24  88]
+ [999 999  65  44]
+ [999  17 999  48]
+ [999  92  95 999]]
+2
+[[999  56 999  88]
+ [999 999 999  44]
+ [999  17 999  48]
+ [999  92 999 999]]
+1
+[[999 999 999  88]
+ [999 999 999  44]
+ [999 999 999  48]
+ [999 999 999 999]]
+3             
+
+'''
+
+
+
+
+print('Total distance: ', dist)
+
+'''
+Output - 
+85
+'''
+
+
+
+
+visited
+
+'''
+Output - 
+[0, 2, 1, 3]
+'''
+
+
+
+
+___________________________________________________________________________________________
+NQUEENS
+___________________________________________________________________________________________
+
+import random
+import numpy as np
+
+def random_state(n):
+    """
+    Returns a random initial state with n queens on an n x n board.
+    """
+    return [random.randint(0, n-1) for _ in range(n)]
+
+def attacks(state):
+    """
+    Returns the number of queen attacks in the given state.
+    """
+    n = len(state)
+    count = 0
+    for i in range(n):
+        for j in range(i+1, n):
+            if state[i] == state[j] or abs(i-j) == abs(state[i]-state[j]):
+                count += 1
+    return count
+
+def hill_climbing(n):
+    """
+    Solves the n-queens problem using hill climbing approach.
+    """
+    current = random_state(n)
+    while True:
+        neighbors = []
+        for col in range(n):
+            for row in range(n):
+                if current[col] != row:
+                    neighbor = list(current)
+                    neighbor[col] = row
+                    neighbors.append(neighbor)
+        if not neighbors:
+            break
+        neighbor = min(neighbors, key=attacks)
+        if attacks(neighbor) >= attacks(current):
+            break
+        current = neighbor
+    return current
+
+# example usage:
+print(hill_climbing(4))
+
+'''
+Output - 
+[2, 0, 3, 1]
+'''
+ 
+
+
+
+board = np.zeros((4,4))
+sol = list(hill_climbing(4))
+for i in range(len(sol)):
+    board[i][sol[i]]=1
+board
+
+'''
+Output - 
+array([[0., 0., 1., 0.],
+       [1., 0., 0., 0.],
+       [0., 0., 0., 1.],
+       [0., 1., 0., 0.]])
+'''
+
+
+
+
+
+___________________________________________________________________________________________
+ITERATIVE_TOH
+___________________________________________________________________________________________
+
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        if not self.is_empty():
+            return self.items.pop()
+
+    def is_empty(self):
+        return len(self.items) == 0
+
+def TowerOfHanoi(n, from_rod, to_rod, aux_rod):
+    stack = Stack()
+    done = False
+
+    while not done:
+        if n > 0:
+            stack.push((n, from_rod, to_rod, aux_rod))
+            n -= 1
+            from_rod, to_rod, aux_rod = from_rod, aux_rod, to_rod
+        else:
+            if not stack.is_empty():
+                n, from_rod, to_rod, aux_rod = stack.pop()
+                print("Move disk", n, "from rod", from_rod, "to rod", to_rod)
+                n -= 1
+                from_rod, to_rod, aux_rod = aux_rod, to_rod, from_rod
+            else:
+                done = True
+TowerOfHanoi(4, '0', '2', '1')
+
+'''
+Output - 
+Move disk 1 from rod 0 to rod 1
+Move disk 2 from rod 0 to rod 2
+Move disk 1 from rod 1 to rod 2
+Move disk 3 from rod 0 to rod 1
+Move disk 1 from rod 2 to rod 0
+Move disk 2 from rod 2 to rod 1
+Move disk 1 from rod 0 to rod 1
+Move disk 4 from rod 0 to rod 2
+Move disk 1 from rod 1 to rod 2
+Move disk 2 from rod 1 to rod 0
+Move disk 1 from rod 2 to rod 0
+Move disk 3 from rod 1 to rod 2
+Move disk 1 from rod 0 to rod 1
+Move disk 2 from rod 0 to rod 2
+Move disk 1 from rod 1 to rod 2
+'''
+
+
+
+n = 4
+print("Number of Moves: ", 2**n - 1)
+
+'''
+Output - 
+15
+'''
+
+
+
+
+'''
+TOH Recursive
+'''
+
+def TowerOfHanoi(n, from_rod, to_rod, aux_rod):
+  if n == 0:
+    return
+  TowerOfHanoi(n-1, from_rod, aux_rod, to_rod)
+  print("Move disk", n, "from rod", from_rod, "to rod", to_rod)
+  TowerOfHanoi(n-1, aux_rod, to_rod, from_rod)
+
+N = 3
+
+TOH(N, 'A', 'B', 'C')
+
+'''
+Output - 
+Move disk 1 from rod A to rod C
+Move disk 2 from rod A to rod B
+Move disk 1 from rod C to rod B
+Move disk 3 from rod A to rod C
+Move disk 1 from rod B to rod A
+Move disk 2 from rod B to rod C
+Move disk 1 from rod A to rod C
+'''
+
+
+
+
+___________________________________________________________________________________________
+WATERJUG
+___________________________________________________________________________________________
+
+from collections import deque
+
+def solve(jug1,jug2,target):
+    
+    initial = (0,0)
+    actions = [
+        ('Fill Jug1',lambda state: (jug1,state[1])),
+        ('Fill Jug2',lambda state: (state[0],jug2)),
+        ('Empty Jug1', lambda state: (0,state[1])),
+        ('Empty Jug2', lambda state: (state[0],0)),
+        ('Pour Jug1 to Jug2', lambda state: (max(0,state[0]+state[1]-jug2),min(state[0]+state[1],jug2))),
+        ('Pour Jug2 to Jug1', lambda state: (min(state[0]+state[1],jug1),max(0,state[0]+state[1]-jug1)))
+    ]
+    
+    queue = deque()
+    queue.append((initial,[]))
+    visited = set()
+    
+    while queue:
+        curr,path = queue.popleft()
+        
+        if curr[0]==target or curr[1]==target:
+            return path
+        
+        for action,func in actions:
+            new = func(curr)
+            if new not in visited:
+                queue.append((new,path+[(action,new)]))
+                visited.add(new)
+    return None
+
+k = solve(4,3,2)
+print('Initial State:',(0,0))
+for i,j in k:
+    print(i,':',j)
+print('Goal state: ', k[-1][1])
+
+'''
+Output - 
+Initial State: (0, 0)
+Fill Jug2 : (0, 3)
+Pour Jug2 to Jug1 : (3, 0)
+Fill Jug2 : (3, 3)
+Pour Jug2 to Jug1 : (4, 2)
+Goal state:  (4, 2)
+'''
+
+
+
+
+___________________________________________________________________________________________
+NLTK
+___________________________________________________________________________________________
+
+import nltk
+from nltk.corpus import stopwords
+from collections import Counter
+
+
+
+
+# # punkt download for word_tokenize to work
+# nltk.download('punkt')
+
+
+
+
+
+# Step 1: Tokenization
+text = "I will walk 500 miles and I would walk 500 more, just to be the man who walks a thousand miles to fall down at your door!"
+tokens = nltk.word_tokenize(text)
+print("Tokens:", tokens)
+
+'''
+Output - 
+Tokens: ['I', 'will', 'walk', '500', 'miles', 'and', 'I', 'would', 'walk', '500', 'more', ',', 'just', 'to', 'be', 'the', 'man', 'who', 'walks', 'a', 'thousand', 'miles', 'to', 'fall', 'down', 'at', 'your', 'door', '!']
+'''
+
+
+
+
+# Step 2 - Count Word Frequency
+word_freq = Counter(tokens)
+word_freq
+
+'''
+Output - 
+Word Frequency: Counter({'I': 2, 'walk': 2, '500': 2, 'miles': 2, 'to': 2, 'will': 1, 'and': 1, 'would': 1, 'more': 1, ',': 1, 'just': 1, 'be': 1, 'the': 1, 'man': 1, 'who': 1, 'walks': 1, 'a': 1, 'thousand': 1, 'fall': 1, 'down': 1, 'at': 1, 'your': 1, 'door': 1, '!': 1})
+'''
+
+
+
+
+# # stopwords download
+# nltk.download('stopwords')
+
+
+
+
+
+# Step 3 - Remove Stop Words 
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [token for token in tokens if token.casefold() not in stop_words]
+filtered_tokens
+
+'''
+Output - 
+Filtered Tokens: ['walk', '500', 'miles', 'would', 'walk', '500', ',', 'man', 'walks', 'thousand', 'miles', 'fall', 'door', '!']
+'''
+
+
+
+
+
+# # pos_tag download
+# nltk.download('averaged_perceptron_tagger')
+
+
+
+
+
+# Step 4 - POS tagging
+pos_tags = nltk.pos_tag(filtered_tokens)
+pos_tags
+
+'''
+Output - 
+POS Tagging: [('walk', 'NN'), ('500', 'CD'), ('miles', 'NNS'), ('would', 'MD'), ('walk', 'VB'), ('500', 'CD'), (',', ','), ('man', 'NN'), ('walks', 'NNS'), ('thousand', 'VBP'), ('miles', 'NNS'), ('fall', 'VB'), ('door', 'NN'), ('!', '.')]
+'''
+
+
+
+___________________________________________________________________________________________
+TIC TAC TOE
+___________________________________________________________________________________________
+
+import math
+
+# Constants for the players
+PLAYER_X = "X"
+PLAYER_O = "O"
+EMPTY = " "
+
+# Function to print the Tic-Tac-Toe board
+def print_board(board):
+    print("-------------")
+    for i in range(3):
+        print("|", end=" ")
+        for j in range(3):
+            print(board[i][j], end=" | ")
+        print("\n-------------")
+
+# Function to check if a player has won
+def check_win(board, player):
+    # Check rows
+    for i in range(3):
+        if board[i][0] == board[i][1] == board[i][2] == player:
+            return True
+
+    # Check columns
+    for j in range(3):
+        if board[0][j] == board[1][j] == board[2][j] == player:
+            return True
+
+    # Check diagonals
+    if board[0][0] == board[1][1] == board[2][2] == player:
+        return True
+    if board[0][2] == board[1][1] == board[2][0] == player:
+        return True
+
+    return False
+
+# Function to check if the board is full
+def is_board_full(board):
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == EMPTY:
+                return False
+    return True
+
+# Function to evaluate the score of the board
+def evaluate(board):
+    if check_win(board, PLAYER_X):
+        return 1
+    elif check_win(board, PLAYER_O):
+        return -1
+    else:
+        return 0
+
+# Minimax algorithm
+def minimax(board, depth, maximizing_player):
+    if check_win(board, PLAYER_X):
+        return 1
+    elif check_win(board, PLAYER_O):
+        return -1
+    elif is_board_full(board):
+        return 0
+
+    if maximizing_player:
+        max_eval = -math.inf
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == EMPTY:
+                    board[i][j] = PLAYER_X
+                    eval = minimax(board, depth + 1, False)
+                    board[i][j] = EMPTY
+                    max_eval = max(max_eval, eval)
+        return max_eval
+    else:
+        min_eval = math.inf
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == EMPTY:
+                    board[i][j] = PLAYER_O
+                    eval = minimax(board, depth + 1, True)
+                    board[i][j] = EMPTY
+                    min_eval = min(min_eval, eval)
+        return min_eval
+
+# Function to find the best move using the Minimax algorithm
+def find_best_move(board):
+    best_eval = -math.inf
+    best_move = None
+
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == EMPTY:
+                board[i][j] = PLAYER_X
+                eval = minimax(board, 0, False)
+                board[i][j] = EMPTY
+
+                if eval > best_eval:
+                    best_eval = eval
+                    best_move = (i, j)
+
+    return best_move
+
+# Main game loop
+def play_game():
+    board = [[EMPTY, EMPTY, EMPTY],
+             [EMPTY, EMPTY, EMPTY],
+             [EMPTY, EMPTY, EMPTY]]
+
+    print("Tic-Tac-Toe")
+    print("Player X: Human")
+    print("Player O: AI")
+
+    print_board(board)
+
+    while True:
+        # Human player's turn
+        row = int(input("Enter the row (0-2): "))
+        col = int(input("Enter the column (0-2): "))
+
+        if board[row][col] == EMPTY:
+            board[row][col] = PLAYER_O
+        else:
+            print("Invalid move! Try again.")
+            continue
+
+        print_board(board)
+
+        if check_win(board, PLAYER_O):
+            print("Player O wins!")
+            break
+
+        if is_board_full(board):
+            print("It's a draw!")
+            break
+
+        # AI player's turn
+        print("AI's turn...")
+        best_move = find_best_move(board)
+        board[best_move[0]][best_move[1]] = PLAYER_X
+
+        print_board(board)
+
+        if check_win(board, PLAYER_X):
+            print("Player X wins!")
+            break
+
+        if is_board_full(board):
+            print("It's a draw!")
+            break
+
+# Start the game
+play_game()
+
+'''
+Output - 
+Tic-Tac-Toe
+Player X: Human
+Player O: AI
+-------------
+|   |   |   | 
+-------------
+|   |   |   | 
+-------------
+|   |   |   | 
+-------------
+Enter the row (0-2): 0
+Enter the column (0-2): 1
+-------------
+|   | O |   | 
+-------------
+|   |   |   | 
+-------------
+|   |   |   | 
+-------------
+AI's turn...
+-------------
+| X | O |   | 
+-------------
+|   |   |   | 
+-------------
+|   |   |   | 
+-------------
+Enter the row (0-2): 2
+Enter the column (0-2): 1
+-------------
+| X | O |   | 
+-------------
+|   |   |   | 
+-------------
+|   | O |   | 
+-------------
+AI's turn...
+-------------
+| X | O |   | 
+-------------
+|   | X |   | 
+-------------
+|   | O |   | 
+-------------
+Enter the row (0-2): 2
+Enter the column (0-2): 2
+-------------
+| X | O |   | 
+-------------
+|   | X |   | 
+-------------
+|   | O | O | 
+-------------
+AI's turn...
+-------------
+| X | O |   | 
+-------------
+|   | X |   | 
+-------------
+| X | O | O | 
+-------------
+Enter the row (0-2): 0
+Enter the column (0-2): 2
+-------------
+| X | O | O | 
+-------------
+|   | X |   | 
+-------------
+| X | O | O | 
+-------------
+AI's turn...
+-------------
+| X | O | O | 
+-------------
+| X | X |   | 
+-------------
+| X | O | O | 
+-------------
+Player X wins!
+'''
+___________________________________________________________________________________________
